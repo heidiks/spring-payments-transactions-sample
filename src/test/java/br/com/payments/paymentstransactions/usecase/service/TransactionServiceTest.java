@@ -1,5 +1,6 @@
 package br.com.payments.paymentstransactions.usecase.service;
 
+import br.com.payments.paymentstransactions.handler.MyResourceBadRequestException;
 import br.com.payments.paymentstransactions.handler.MyResourceNotFoundException;
 import br.com.payments.paymentstransactions.model.Account;
 import br.com.payments.paymentstransactions.model.OperationType;
@@ -66,6 +67,23 @@ class TransactionServiceTest {
         );
 
         Assertions.assertTrue(myResourceNotFoundException.getMessage().contains("Operation Type não existente"));
+    }
+
+    @Test
+    void should_throw_exception_with_negative_amount_value() {
+        when(accountService.findById(Mockito.any())).thenReturn(Optional.of(new Account()));
+
+        OperationType operationType = OperationType.builder().isDebit(false).description("PAGAMENTO").build();
+        when(operationTypeService.findById(Mockito.any())).thenReturn(Optional.of(operationType));
+        dto.setAmount(-123.0);
+
+        MyResourceBadRequestException myResourceNotFoundException = Assertions.assertThrows(
+                MyResourceBadRequestException.class,
+                () -> transactionService.save(dto)
+        );
+
+        Assertions.assertTrue(myResourceNotFoundException.getMessage().contains("Campo Amount não deve ser negativo"));
+
     }
 
     @Test

@@ -1,5 +1,6 @@
 package br.com.payments.paymentstransactions.model;
 
+import br.com.payments.paymentstransactions.handler.MyResourceBadRequestException;
 import br.com.payments.paymentstransactions.model.dto.TransactionDTO;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -21,6 +22,9 @@ public class Transaction {
     private LocalDateTime eventDate;
 
     public static Transaction of(TransactionDTO dto) {
+        if(dto.getAmount() < 0)
+            throw new MyResourceBadRequestException("Campo Amount não deve ser negativo");
+
         Transaction transactionToSave = Transaction.builder()
                 .accountId(dto.getAccountID())
                 .operationTypeId(dto.getOperationTypeId())

@@ -17,7 +17,6 @@ public class AccountController {
 
     @PostMapping
     public Account save(@RequestBody AccountDTO accountDTO) {
-
         return accountService.save(accountDTO);
     }
 
