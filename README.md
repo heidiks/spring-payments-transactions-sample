@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/heidiks/spring-payments-transactions-sample.svg?branch=main)](https://travis-ci.org/heidiks/spring-payments-transactions-sample)
+
 # spring-payments-transactions-sample
 
 ### Stack:
