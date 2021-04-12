@@ -17,6 +17,10 @@
 db.getCollection("account").createIndex({ "documentNumber": 1 }, {
     "unique": true
 })
+
+db.getCollection("OperationType").createIndex({ "description": 1 }, {
+    "unique": true
+})
 ```
 
 ### Run local
