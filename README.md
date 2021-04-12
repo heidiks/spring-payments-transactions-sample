@@ -10,6 +10,13 @@
 - Maven
 - Docker
 
+### MongoDB index
+```
+db.getCollection("account").createIndex({ "documentNumber": 1 }, {
+    "unique": true
+})
+```
+
 ### Run local
 ```sh
 $
