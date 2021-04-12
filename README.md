@@ -33,4 +33,4 @@ http://localhost:8080/swagger-ui/#/
 
 
 ### Configuration (Optional)
-For configure appid from openweather, edit *openweather.api.key* on **application.properties**.
+For mongodb settings change on **application.properties** file.
