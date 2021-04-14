@@ -2,10 +2,7 @@ package br.com.payments.paymentstransactions.model;
 
 import br.com.payments.paymentstransactions.handler.MyResourceBadRequestException;
 import br.com.payments.paymentstransactions.model.dto.TransactionDTO;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +15,8 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Transaction {
 
     @Id
