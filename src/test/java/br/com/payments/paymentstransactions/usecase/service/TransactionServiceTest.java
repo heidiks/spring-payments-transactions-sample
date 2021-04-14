@@ -5,6 +5,7 @@ import br.com.payments.paymentstransactions.handler.MyResourceNotFoundException;
 import br.com.payments.paymentstransactions.model.Account;
 import br.com.payments.paymentstransactions.model.OperationType;
 import br.com.payments.paymentstransactions.model.Transaction;
+import br.com.payments.paymentstransactions.model.dto.AccountDTO;
 import br.com.payments.paymentstransactions.model.dto.TransactionDTO;
 import br.com.payments.paymentstransactions.usecase.repository.ITransactionRepository;
 import org.junit.jupiter.api.Assertions;
@@ -34,6 +35,8 @@ class TransactionServiceTest {
     private TransactionService transactionService;
 
     private TransactionDTO dto;
+    private AccountDTO accountDTO;
+
 
     @BeforeEach
     private void setup() {
@@ -41,6 +44,9 @@ class TransactionServiceTest {
         dto.setAmount(123.0);
         dto.setAccountID(1L);
         dto.setOperationTypeId(1L);
+
+        accountDTO = new AccountDTO();
+        accountDTO.setDocumentNumber("document_number");
     }
 
     @Test
@@ -49,7 +55,7 @@ class TransactionServiceTest {
 
         MyResourceNotFoundException myResourceNotFoundException = Assertions.assertThrows(
                 MyResourceNotFoundException.class,
-                () -> transactionService.save(dto)
+                () -> transactionService.doTransaction(dto)
         );
 
         Assertions.assertTrue(myResourceNotFoundException.getMessage().contains("Account não existente"));
@@ -63,7 +69,7 @@ class TransactionServiceTest {
 
         MyResourceNotFoundException myResourceNotFoundException = Assertions.assertThrows(
                 MyResourceNotFoundException.class,
-                () -> transactionService.save(dto)
+                () -> transactionService.doTransaction(dto)
         );
 
         Assertions.assertTrue(myResourceNotFoundException.getMessage().contains("Operation Type não existente"));
@@ -79,7 +85,7 @@ class TransactionServiceTest {
 
         MyResourceBadRequestException myResourceNotFoundException = Assertions.assertThrows(
                 MyResourceBadRequestException.class,
-                () -> transactionService.save(dto)
+                () -> transactionService.doTransaction(dto)
         );
 
         Assertions.assertTrue(myResourceNotFoundException.getMessage().contains("Campo Amount não deve ser negativo"));
@@ -87,29 +93,49 @@ class TransactionServiceTest {
     }
 
     @Test
+    void should_not_save_if_doesnt_have_credit_limit() {
+        accountDTO.setAvailableCreditLimit(10.0);
+        Account account = Account.of(accountDTO);
+
+        when(accountService.findById(Mockito.any())).thenReturn(Optional.of(account));
+        OperationType operationType = OperationType.builder().isDebit(true).description("PAGAMENTO").build();
+        when(operationTypeService.findById(Mockito.any())).thenReturn(Optional.of(operationType));
+
+        MyResourceBadRequestException ex = Assertions.assertThrows(
+                MyResourceBadRequestException.class,
+                () -> transactionService.doTransaction(dto)
+        );
+
+        Assertions.assertTrue(ex.getMessage().contains("Valor da transação maior que limite disponível"));
+
+    }
+
+    @Test
     void should_save_credit_transaction() {
-        when(accountService.findById(Mockito.any())).thenReturn(Optional.of(new Account()));
+        Account account = Account.of(accountDTO);
+        when(accountService.findById(Mockito.any())).thenReturn(Optional.of(account));
 
         OperationType operationType = OperationType.builder().isDebit(false).description("PAGAMENTO").build();
         when(operationTypeService.findById(Mockito.any())).thenReturn(Optional.of(operationType));
 
         when(repository.save(Mockito.any())).thenReturn(Mockito.any(Transaction.class));
 
-        transactionService.save(dto);
+        transactionService.doTransaction(dto);
 
         Mockito.verify(repository).save(Mockito.any());
     }
 
     @Test
     void should_save_debit_transaction() {
-        when(accountService.findById(Mockito.any())).thenReturn(Optional.of(new Account()));
+        Account account = Account.of(accountDTO);
+        when(accountService.findById(Mockito.any())).thenReturn(Optional.of(account));
 
         OperationType operationType = OperationType.builder().isDebit(true).description("SAQUE").build();
         when(operationTypeService.findById(Mockito.any())).thenReturn(Optional.of(operationType));
 
         when(repository.save(Mockito.any())).thenReturn(Mockito.any(Transaction.class));
 
-        transactionService.save(dto);
+        transactionService.doTransaction(dto);
 
         Mockito.verify(repository).save(Mockito.any());
     }

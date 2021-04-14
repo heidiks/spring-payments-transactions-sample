@@ -7,6 +7,7 @@ import br.com.payments.paymentstransactions.usecase.repository.IAccountRepositor
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -29,5 +30,10 @@ public class AccountService {
 
     public Optional<Account> findById(Long id) {
         return IAccountRepository.findById(id);
+    }
+
+    @Transactional
+    public Account update(Account account) {
+        return IAccountRepository.save(account);
     }
 }

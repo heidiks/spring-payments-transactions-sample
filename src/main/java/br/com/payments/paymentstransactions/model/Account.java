@@ -15,6 +15,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Account {
 
+    public static final double DEFAULT_AVAILABLE_CREDIT_LIMIT = 500.0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,9 +24,15 @@ public class Account {
     @Column(unique = true, nullable = false)
     private String documentNumber;
 
+    @Column
+    private Double availableCreditLimit;
+
     public static Account of(AccountDTO dto) {
         Account account = new Account();
         account.setDocumentNumber(dto.getDocumentNumber());
+        account.setAvailableCreditLimit(dto.getAvailableCreditLimit());
+        if(dto.getAvailableCreditLimit() == null)
+            account.setAvailableCreditLimit(DEFAULT_AVAILABLE_CREDIT_LIMIT);
 
         return account;
     }
