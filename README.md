@@ -5,23 +5,13 @@
 ### Stack:
 - Spring Boot 2.4.4
 - Lombok
-- MongoDB
+- H2
 
 ### Require
 - JDK 11
 - Maven
 - Docker
 
-### MongoDB index
-```
-db.getCollection("account").createIndex({ "documentNumber": 1 }, {
-    "unique": true
-})
-
-db.getCollection("OperationType").createIndex({ "description": 1 }, {
-    "unique": true
-})
-```
 
 ### Run local
 ```sh
@@ -46,4 +36,4 @@ http://localhost:8080/swagger-ui/#/
 
 
 ### Configuration (Optional)
-For mongodb settings change on **application.properties** file.
+For h2 settings change on **application.properties** file.

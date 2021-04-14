@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Builder
 public class AccountDTO implements Serializable {
 
-    private String id;
+    private Long id;
     @JsonProperty(value = "document_number")
     private String documentNumber;
 

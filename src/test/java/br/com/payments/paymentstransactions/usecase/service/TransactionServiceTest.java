@@ -39,8 +39,8 @@ class TransactionServiceTest {
     private void setup() {
         dto = new TransactionDTO();
         dto.setAmount(123.0);
-        dto.setAccountID("account_id");
-        dto.setOperationTypeId("operation_id");
+        dto.setAccountID(1L);
+        dto.setOperationTypeId(1L);
     }
 
     @Test

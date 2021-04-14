@@ -2,22 +2,29 @@ package br.com.payments.paymentstransactions.model;
 
 import br.com.payments.paymentstransactions.handler.MyResourceBadRequestException;
 import br.com.payments.paymentstransactions.model.dto.TransactionDTO;
-import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
+@Entity
 @Getter
 @Setter
 @Builder
-@Document(collection = "transaction")
+@Data
 public class Transaction {
 
     @Id
-    private String id;
-    private String accountId;
-    private String operationTypeId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private Long accountId;
+    private Long operationTypeId;
     private Double amount;
     private LocalDateTime eventDate;
 

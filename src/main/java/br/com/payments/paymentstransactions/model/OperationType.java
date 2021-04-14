@@ -2,21 +2,27 @@ package br.com.payments.paymentstransactions.model;
 
 
 import br.com.payments.paymentstransactions.model.dto.OperationTypeDTO;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.*;
 
-@Document(collection = "OperationType")
+import javax.persistence.*;
+
+@Entity
 @Getter
 @Setter
 @Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class OperationType {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
     private String description;
+
+    @Column(nullable = false)
     private boolean isDebit;
 
     public static OperationType of(OperationTypeDTO dto) {

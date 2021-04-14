@@ -1,7 +1,7 @@
 package br.com.payments.paymentstransactions.usecase.repository;
 
 import br.com.payments.paymentstransactions.model.Transaction;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface ITransactionRepository extends MongoRepository<Transaction, String> {
+public interface ITransactionRepository extends CrudRepository<Transaction, Long> {
 }

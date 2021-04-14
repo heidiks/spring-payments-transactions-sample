@@ -1,5 +1,7 @@
 package br.com.payments.paymentstransactions.usecase.service;
 
+import br.com.payments.paymentstransactions.handler.MyResourceBadRequestException;
+import br.com.payments.paymentstransactions.model.dto.AccountDTO;
 import br.com.payments.paymentstransactions.model.dto.OperationTypeDTO;
 import br.com.payments.paymentstransactions.usecase.repository.IOperationTypeRepository;
 import org.junit.jupiter.api.Assertions;
@@ -9,6 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class OperationTypeServiceTest {
@@ -32,9 +37,23 @@ class OperationTypeServiceTest {
     }
 
     @Test
-    void should_find_by_id() {
-       operationTypeService.findById("id");
+    void should_not_save_duplicated_document_numbers() {
+        Mockito.when(repository.save(Mockito.any())).thenThrow(DataIntegrityViolationException.class);
 
-       Mockito.verify(repository).findById("id");
+
+        MyResourceBadRequestException ex = assertThrows(
+                MyResourceBadRequestException.class,
+                () ->  operationTypeService.save(OperationTypeDTO.builder().isDebit(false).description("descricao").build())
+        );
+
+        Assertions.assertTrue(ex.getMessage().contains("OperationType já existente"));
+
+    }
+
+    @Test
+    void should_find_by_id() {
+       operationTypeService.findById(1L);
+
+       Mockito.verify(repository).findById(1L);
     }
 }

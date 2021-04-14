@@ -9,10 +9,10 @@ import lombok.Setter;
 public class TransactionDTO {
 
     @JsonProperty(value = "account_id")
-    private String accountID;
+    private Long accountID;
 
     @JsonProperty(value = "operation_type_id")
-    private String operationTypeId;
+    private Long operationTypeId;
 
     private Double amount;
 }

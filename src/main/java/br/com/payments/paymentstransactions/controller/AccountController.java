@@ -21,7 +21,7 @@ public class AccountController {
     }
 
     @GetMapping
-    public Optional<Account> findById(String id) {
+    public Optional<Account> findById(Long id) {
         return accountService.findById(id);
     }
 }

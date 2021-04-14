@@ -10,7 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -32,7 +32,7 @@ class AccountServiceTest {
 
     @Test
     void should_not_save_duplicated_document_numbers() {
-        Mockito.when(repository.save(Mockito.any())).thenThrow(DuplicateKeyException.class);
+        Mockito.when(repository.save(Mockito.any())).thenThrow(DataIntegrityViolationException.class);
 
 
         MyResourceBadRequestException ex = assertThrows(
@@ -46,9 +46,9 @@ class AccountServiceTest {
 
     @Test
     void should_find_by_id() {
-        accountService.findById("id");
+        accountService.findById(1L);
 
-        Mockito.verify(repository).findById("id");
+        Mockito.verify(repository).findById(1L);
     }
 
 }

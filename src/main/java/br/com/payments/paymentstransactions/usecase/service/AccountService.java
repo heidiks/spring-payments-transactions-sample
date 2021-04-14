@@ -5,7 +5,7 @@ import br.com.payments.paymentstransactions.model.Account;
 import br.com.payments.paymentstransactions.model.dto.AccountDTO;
 import br.com.payments.paymentstransactions.usecase.repository.IAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,13 +21,13 @@ public class AccountService {
 
         try {
             return IAccountRepository.save(account);
-        } catch (DuplicateKeyException de) {
+        } catch (DataIntegrityViolationException de) {
             throw  new MyResourceBadRequestException("Account já existente");
         }
 
     }
 
-    public Optional<Account> findById(String id) {
+    public Optional<Account> findById(Long id) {
         return IAccountRepository.findById(id);
     }
 }
